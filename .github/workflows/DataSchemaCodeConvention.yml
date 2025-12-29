@@ -9,6 +9,6 @@ jobs:
             - name: Checkout Code in Repository
               uses: "actions/checkout@v3"
             - name: Start SQL Linter
-              run:
+              run: |
                 pip install sqlfluff
                 sqlfluff lint $GITHUB_WORKSPACE/query.sql --dialect postgres

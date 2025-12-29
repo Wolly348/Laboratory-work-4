@@ -11,4 +11,4 @@ jobs:
             - name: Start SQL Linter
               run: |
                 pip install sqlfluff
-                sqlfluff lint $GITHUB_WORKSPACE/query.sql --dialect postgres
+                sqlfluff lint $GITHUB_WORKSPACE/RelationDB_DetailedDataSchema.sql --dialect postgres

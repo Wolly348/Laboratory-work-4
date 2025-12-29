@@ -14,7 +14,7 @@ DROP TABLE IF EXISTS users CASCADE;
 
 CREATE TABLE users ( -- опис користувача
     user_id SMALLINT, -- N користувача
-    name VARCHAR(99), -- ім'я користувача
+    full_name VARCHAR(99), -- ім'я користувача
     age SMALLINT, -- вік користувача
     email VARCHAR(99) -- поштова скринька користувача
 );
@@ -24,11 +24,11 @@ ADD CONSTRAINT users_pk
 PRIMARY KEY (user_id);
 
 ALTER TABLE users
-ALTER COLUMN name SET NOT NULL;
+ALTER COLUMN full_name SET NOT NULL;
 
 ALTER TABLE users
-ADD CONSTRAINT users_name_template
-CHECK (name ~ '^[A-Za-z]+( [A-Za-z]+)+$');
+ADD CONSTRAINT users_full_name_template
+CHECK (full_name ~ '^[A-Za-z]+( [A-Za-z]+)+$');
 
 ALTER TABLE users
 ADD CONSTRAINT users_age_constraint
@@ -79,7 +79,7 @@ REFERENCES users (user_id);
 CREATE TABLE document ( -- опис документа
     document_id SMALLINT, -- N документа
     title VARCHAR(149), -- назва документа
-    content TEXT, -- зміст документа
+    content_text TEXT, -- зміст документа
     date_created DATE, -- дата створення документа
     catalogue_id SMALLINT, -- N каталогу
     user_id SMALLINT -- N користувача
@@ -94,7 +94,7 @@ ALTER COLUMN title SET NOT NULL;
 
 ALTER TABLE document
 ADD CONSTRAINT document_content_constraint
-CHECK (octet_length(content) < 10 * 1024 * 1024);
+CHECK (octet_length(content_text) < 10 * 1024 * 1024);
 
 ALTER TABLE document
 ALTER COLUMN date_created SET NOT NULL;
@@ -246,7 +246,7 @@ REFERENCES important_text (text_id);
 
 CREATE TABLE doctor ( -- опис лікаря
     doctor_id SMALLINT, -- N лікаря
-    name VARCHAR(99), -- ім'я лікаря
+    full_name VARCHAR(99), -- ім'я лікаря
     email VARCHAR(99), -- поштова скринька лікаря
     work_experience SMALLINT, -- стаж роботи лікаря
     workplace VARCHAR(249), -- місце роботи лікаря
@@ -258,11 +258,11 @@ ADD CONSTRAINT doctor_pk
 PRIMARY KEY (doctor_id);
 
 ALTER TABLE doctor
-ALTER COLUMN name SET NOT NULL;
+ALTER COLUMN full_name SET NOT NULL;
 
 ALTER TABLE doctor
-ADD CONSTRAINT doctor_name_template
-CHECK (name ~ '^[A-Za-z]+( [A-Za-z]+)+$');
+ADD CONSTRAINT doctor_full_name_template
+CHECK (full_name ~ '^[A-Za-z]+( [A-Za-z]+)+$');
 
 ALTER TABLE doctor
 ALTER COLUMN email SET NOT NULL;
@@ -360,7 +360,7 @@ CREATE TABLE detailed_information ( -- опис детальної інформ�
     title VARCHAR(99), -- назва поради
     date_added DATE, -- дата додавання поради
     rating NUMERIC(2, 1), -- середня оцінка користувачів
-    content BYTEA, -- зміст поради
+    content_data BYTEA, -- зміст поради
     advice_id SMALLINT -- N поради
 );
 
@@ -385,11 +385,11 @@ ADD CONSTRAINT detailed_information_rating_constraint
 CHECK (rating BETWEEN 0 AND 5);
 
 ALTER TABLE detailed_information
-ALTER COLUMN content SET NOT NULL;
+ALTER COLUMN content_data SET NOT NULL;
 
 ALTER TABLE detailed_information
 ADD CONSTRAINT detailed_information_content_constraint
-CHECK (octet_length(content) < 5 * 1024 * 1024);
+CHECK (octet_length(content_data) < 5 * 1024 * 1024);
 
 ALTER TABLE detailed_information
 ALTER COLUMN advice_id SET NOT NULL;
@@ -422,7 +422,8 @@ ADD CONSTRAINT sorting_advice_fk
 FOREIGN KEY (advice_id)
 REFERENCES advice (advice_id);
 
-CREATE TABLE detailed_viewing ( -- сполучна таблиця між користувачем та детальною інформацєю поради
+-- сполучна таблиця між користувачем та детальною інформацєю поради
+CREATE TABLE detailed_viewing (
     user_id SMALLINT, -- N користувача
     info_id SMALLINT -- N детальної інформації поради
 );
